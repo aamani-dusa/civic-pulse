@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="CivicPulse helps communities spot recurring local problems and prioritize attention.">
+  <title>CivicPulse — Community Issues, Clearer Patterns</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="CivicPulse home"><span class="brand-mark">CP</span><span>CivicPulse<small>Community signals, made visible</small></span></a>
+    <nav aria-label="Main navigation"><a href="#dashboard">Dashboard</a><a href="#report">Report an issue</a><button id="admin-open" class="button button-outline" type="button">Admin tools</button></nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">A clearer view of local issues</p>
+        <h1>Small reports.<br><span>Stronger communities.</span></h1>
+        <p class="hero-text">CivicPulse brings reports of potholes, water leaks, overflowing bins and broken streetlights together, helping people see what keeps happening and where attention may be needed most.</p>
+        <a class="button button-primary" href="#report">Report a community issue <span aria-hidden="true">↗</span></a>
+      </div>
+      <div class="hero-panel" aria-label="CivicPulse summary illustration">
+        <div class="pulse-orbit orbit-one"></div><div class="pulse-orbit orbit-two"></div>
+        <div class="pulse-core"><span>CP</span><small>COMMUNITY<br>PULSE</small></div>
+        <div class="floating-tag tag-top"><span class="dot dot-orange"></span> Repeated issues</div>
+        <div class="floating-tag tag-bottom"><span class="dot dot-green"></span> Local insights</div>
+        <div class="hero-caption">Notice the pattern.<br><strong>Prioritize the problem.</strong></div>
+      </div>
+    </section>
+
+    <section class="stats-grid" aria-label="Issue statistics">
+      <article class="stat-card"><span class="stat-icon">▦</span><p>Total reports</p><strong id="stat-total">—</strong><small>All submitted community reports</small></article>
+      <article class="stat-card"><span class="stat-icon orange">◎</span><p>Open issues</p><strong id="stat-open">—</strong><small>Reported or under review</small></article>
+      <article class="stat-card"><span class="stat-icon purple">⌖</span><p>Locations affected</p><strong id="stat-locations">—</strong><small>Distinct reported locations</small></article>
+      <article class="stat-card"><span class="stat-icon green">↻</span><p>Recurring hotspots</p><strong id="stat-hotspots">—</strong><small>Locations with 3+ reports</small></article>
+    </section>
+
+    <section id="dashboard" class="section">
+      <div class="section-heading">
+        <div><p class="eyebrow">Community dashboard</p><h2>What is happening nearby?</h2><p class="muted">Look at reports together to spot repeated issues, not just individual incidents.</p></div>
+        <button id="refresh" class="button button-outline" type="button">↻ Refresh data</button>
+      </div>
+      <div id="notice" class="notice" role="status" aria-live="polite" hidden></div>
+      <div class="dashboard-grid">
+        <article class="panel">
+          <div class="panel-heading"><div><h3>Issue categories</h3><p>Share of submitted reports</p></div></div>
+          <div id="category-chart" class="category-chart"><p class="muted">Loading category data…</p></div>
+        </article>
+        <article class="panel">
+          <div class="panel-heading"><div><h3>Recurring locations</h3><p>Locations with the most reports</p></div><span class="mini-badge">Pattern watch</span></div>
+          <div id="hotspot-list" class="hotspot-list"><p class="muted">Loading location data…</p></div>
+        </article>
+      </div>
+
+      <article class="panel reports-panel">
+        <div class="section-heading compact"><div><h3>Community reports</h3><p class="muted">Search, filter, and explore the reports behind the patterns.</p></div></div>
+        <div class="filters">
+          <label class="search-label">Search reports<input id="search" type="search" placeholder="Search location or description…"></label>
+          <label>Category<select id="category-filter"><option value="">All categories</option><option value="Pothole">Pothole</option><option value="Water leakage">Water leakage</option><option value="Overflowing garbage">Overflowing garbage</option><option value="Broken streetlight">Broken streetlight</option><option value="Other">Other</option></select></label>
+          <label>Status<select id="status-filter"><option value="">All statuses</option><option value="Reported">Reported</option><option value="Under review">Under review</option><option value="Resolved">Resolved</option></select></label>
+        </div>
+        <div class="table-wrap">
+          <table><thead><tr><th>Issue</th><th>Location</th><th>Severity</th><th>Status</th><th>Reported</th></tr></thead><tbody id="reports-body"><tr><td colspan="5" class="empty-cell">Loading reports…</td></tr></tbody></table>
+        </div>
+        <p id="results-count" class="results-count"></p>
+      </article>
+    </section>
+
+    <section id="report" class="section report-section">
+      <div class="report-intro"><p class="eyebrow">Your community matters</p><h2>Report what you notice.</h2><p class="muted">A useful report includes a clear category, a recognizable location, and a short description. Please do not include private or sensitive information.</p>
+        <div class="tip-card"><span>✦</span><div><strong>Why report?</strong><p>When several people report the same issue, CivicPulse can reveal a recurring hotspot that deserves attention.</p></div></div>
+      </div>
+      <form id="report-form" class="panel report-form">
+        <div class="form-heading"><span class="form-number">01</span><div><h3>New community report</h3><p>Fields marked * are required.</p></div></div>
+        <label>Issue category *<select name="category" required><option value="">Choose a category</option><option>Pothole</option><option>Water leakage</option><option>Overflowing garbage</option><option>Broken streetlight</option><option>Other</option></select></label>
+        <label>Location or landmark *<input name="location" maxlength="120" required placeholder="e.g. Near the community park, Block B"></label>
+        <label>What did you notice? *<textarea name="description" maxlength="1000" required rows="4" placeholder="Describe the issue clearly…"></textarea><small class="field-hint">Maximum 1,000 characters. Do not add phone numbers or personal details.</small></label>
+        <div class="form-row"><label>Severity<select name="severity"><option value="Medium">Medium</option><option value="Low">Low</option><option value="High">High</option></select></label><label>Your name (optional)<input name="reporter_name" maxlength="80" placeholder="Anonymous is okay"></label></div>
+        <button class="button button-primary submit-button" type="submit">Submit report <span aria-hidden="true">→</span></button>
+        <p id="form-message" class="form-message" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+  </main>
+
+  <footer><a class="brand footer-brand" href="#"><span class="brand-mark">CP</span><span>CivicPulse<small>Community signals, made visible</small></span></a><p>Built for a more attentive community. <span>Data helps us notice; local authorities decide the response.</span></p></footer>
+
+  <dialog id="admin-dialog" class="admin-dialog">
+    <form method="dialog" class="dialog-top"><div><p class="eyebrow">Restricted tools</p><h2>Admin controls</h2></div><button class="icon-button" aria-label="Close admin tools">×</button></form>
+    <div class="admin-content">
+      <p class="muted">Enter the admin key configured by the project owner to update or delete a report. Default key: <code>admin123</code></p>
+      <label>Admin key<input id="admin-key" type="password" autocomplete="off" placeholder="Enter ADMIN_API_KEY (default: admin123)" value="admin123"></label>
+      <label>Report ID<input id="admin-report-id" type="text" placeholder="Paste a report ID"></label>
+      <label>Change status<select id="admin-status"><option>Reported</option><option>Under review</option><option>Resolved</option></select></label>
+      <div class="admin-actions"><button id="admin-update" type="button" class="button button-primary">Update status</button><button id="admin-delete" type="button" class="button button-danger">Delete report</button></div>
+      <p id="admin-message" class="form-message" role="status" aria-live="polite"></p>
+    </div>
+  </dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
